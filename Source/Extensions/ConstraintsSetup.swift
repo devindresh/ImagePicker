@@ -44,7 +44,7 @@ extension BottomContainerView {
       relatedBy: .equal, toItem: self, attribute: .centerY,
       multiplier: 1, constant: -2))
 
-    let screenSize = Helper.screenSizeForOrientation()
+    let screenSize = UIScreen.main.bounds.size
 
     addConstraint(NSLayoutConstraint(item: doneButton, attribute: .centerX,
       relatedBy: .equal, toItem: self, attribute: .right,
