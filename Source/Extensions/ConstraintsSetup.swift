@@ -44,15 +44,16 @@ extension BottomContainerView {
       relatedBy: .equal, toItem: self, attribute: .centerY,
       multiplier: 1, constant: -2))
 
-    let screenSize = UIScreen.main.bounds.size
+    let currentSize = UIScreen.main.bounds.size
+    let portraitScreenSize = CGSize(width: min(currentSize.width, currentSize.height), height: max(currentSize.width, currentSize.height))
 
     addConstraint(NSLayoutConstraint(item: doneButton, attribute: .centerX,
       relatedBy: .equal, toItem: self, attribute: .right,
-      multiplier: 1, constant: -(screenSize.width - (ButtonPicker.Dimensions.buttonBorderSize + screenSize.width)/2)/2))
+      multiplier: 1, constant: -(portraitScreenSize.width - (ButtonPicker.Dimensions.buttonBorderSize + portraitScreenSize.width)/2)/2))
 
     addConstraint(NSLayoutConstraint(item: stackView, attribute: .centerX,
       relatedBy: .equal, toItem: self, attribute: .left,
-      multiplier: 1, constant: screenSize.width/4 - ButtonPicker.Dimensions.buttonBorderSize/3))
+      multiplier: 1, constant: portraitScreenSize.width/4 - ButtonPicker.Dimensions.buttonBorderSize/3))
 
     addConstraint(NSLayoutConstraint(item: topSeparator, attribute: .height,
       relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,
