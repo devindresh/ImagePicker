@@ -74,7 +74,11 @@ open class ImagePickerController: UIViewController {
   open var imageLimit = 0
   open var preferredImageSize: CGSize?
   open var startOnFrontCamera = false
-  var totalSize: CGSize { return UIScreen.main.bounds.size }
+  lazy var totalSize: CGSize = {
+    let currentSize = UIScreen.main.bounds.size
+    let portraitScreenSize = CGSize(width: min(currentSize.width, currentSize.height), height: max(currentSize.width, currentSize.height))
+    return portraitScreenSize
+  }()
   var initialFrame: CGRect?
   var initialContentOffset: CGPoint?
   var numberOfCells: Int?
@@ -293,6 +297,18 @@ open class ImagePickerController: UIViewController {
     return statusBarHidden
   }
 
+    // MARK: - Rotation
+    open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    open override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
   open func collapseGalleryView(_ completion: (() -> Void)?) {
     galleryView.collectionViewLayout.invalidateLayout()
     UIView.animate(withDuration: 0.3, animations: {
@@ -430,12 +446,6 @@ extension ImagePickerController: CameraViewDelegate {
     topView.flashButton.isHidden = true
     topView.rotateCamera.isHidden = true
     bottomContainer.pickerButton.isEnabled = false
-  }
-
-  // MARK: - Rotation
-
-  open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return .portrait
   }
 
   @objc public func handleRotation(_ note: Notification?) {

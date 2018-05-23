@@ -172,6 +172,8 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
 
     let centerX = view.bounds.width / 2
 
+    previewLayer?.frame = view.layer.frame
+    
     noCameraLabel.center = CGPoint(x: centerX,
       y: view.bounds.height / 2 - 80)
 
