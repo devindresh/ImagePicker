@@ -128,8 +128,8 @@ open class ImageGalleryView: UIView {
   }
 
   func updateFrames() {
-    let totalWidth = UIScreen.main.bounds.width
-    frame.size.width = totalWidth
+    let totalWidth = frame.width
+
     let collectionFrame = frame.height == Dimensions.galleryBarHeight ? 100 + Dimensions.galleryBarHeight : frame.height
     topSeparator.frame = CGRect(x: 0, y: 0, width: totalWidth, height: Dimensions.galleryBarHeight)
     topSeparator.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleWidth]

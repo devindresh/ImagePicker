@@ -248,8 +248,8 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
   // MARK: - Camera methods
 
   func focusTo(_ point: CGPoint) {
-    let convertedPoint = CGPoint(x: point.x / UIScreen.main.bounds.width,
-                                 y: point.y / UIScreen.main.bounds.height)
+    let convertedPoint = CGPoint(x: point.x / self.view.bounds.width,
+                                 y: point.y / self.view.bounds.height)
 
     cameraMan.focus(convertedPoint)
 
@@ -322,4 +322,16 @@ class CameraView: UIViewController, CLLocationManagerDelegate, CameraManDelegate
   func cameraManDidStart(_ cameraMan: CameraMan) {
     setupPreviewLayer()
   }
+
+    // MARK: - Rotation
+    open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    open override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
 }

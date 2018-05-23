@@ -74,11 +74,6 @@ open class ImagePickerController: UIViewController {
   open var imageLimit = 0
   open var preferredImageSize: CGSize?
   open var startOnFrontCamera = false
-  lazy var totalSize: CGSize = {
-    let currentSize = UIScreen.main.bounds.size
-    let portraitScreenSize = CGSize(width: min(currentSize.width, currentSize.height), height: max(currentSize.width, currentSize.height))
-    return portraitScreenSize
-  }()
   var initialFrame: CGRect?
   var initialContentOffset: CGPoint?
   var numberOfCells: Int?
@@ -144,24 +139,35 @@ open class ImagePickerController: UIViewController {
     self.handleRotation(nil)
   }
 
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: { (context) in
+            self.reframeGallery()
+        }) { (context) in
+
+        }
+    }
+    
+    func reframeGallery () {
+        let galleryHeight: CGFloat = UIScreen.main.nativeBounds.height == 960
+            ? ImageGalleryView.Dimensions.galleryBarHeight : GestureConstants.minimumHeight
+        self.galleryView.frame = CGRect(x: 0,
+                                        y: self.view.frame.height - self.bottomContainer.frame.height - galleryHeight,
+                                        width: self.view.frame.width,
+                                        height: galleryHeight)
+        self.galleryView.updateFrames()
+    }
+    
   open override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
 
-    let galleryHeight: CGFloat = UIScreen.main.nativeBounds.height == 960
-      ? ImageGalleryView.Dimensions.galleryBarHeight : GestureConstants.minimumHeight
+    self.reframeGallery()
 
     galleryView.collectionView.transform = CGAffineTransform.identity
     galleryView.collectionView.contentInset = UIEdgeInsets.zero
 
-    galleryView.frame = CGRect(x: 0,
-                               y: totalSize.height - bottomContainer.frame.height - galleryHeight,
-                               width: totalSize.width,
-                               height: galleryHeight)
-    galleryView.updateFrames()
     checkStatus()
-
-    initialFrame = galleryView.frame
-    initialContentOffset = galleryView.collectionView.contentOffset
 
     applyOrientationTransforms()
 
@@ -302,7 +308,7 @@ open class ImagePickerController: UIViewController {
         return .portrait
     }
     open override var shouldAutorotate: Bool {
-        return false
+        return true
     }
     
     open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -344,7 +350,7 @@ open class ImagePickerController: UIViewController {
   }
 
   func updateGalleryViewFrames(_ constant: CGFloat) {
-    galleryView.frame.origin.y = totalSize.height - bottomContainer.frame.height - constant
+    galleryView.frame.origin.y = self.view.frame.height - bottomContainer.frame.height - constant
     galleryView.frame.size.height = constant
   }
 
